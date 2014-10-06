@@ -3,7 +3,7 @@ package com.kalpesh.map.direction.finder;
 /**
  * Created by abc on 03-10-2014.
  */
-class DirectionApiReqConstants {
+public class DirectionApiReqConstants {
     public static final String KEY_ORIGIN = "origin";
     public static final String KEY_DESTINATION = "destination";
     public static final String KEY_API_KEY = "key";
