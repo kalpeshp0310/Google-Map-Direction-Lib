@@ -9,7 +9,7 @@ import com.kalpesh.map.direction.utils.LogUtils;
 import com.kalpesh.map.direction.utils.Utils;
 
 /**
- * Created by abc on 03-10-2014.
+ * Created by Kalpesh Patel on 03-10-2014.
  */
 public class DirectionFinder {
 
@@ -20,18 +20,37 @@ public class DirectionFinder {
 
 
     public DirectionFinder(Context context, String apiKey) {
-        if(TextUtils.isEmpty(apiKey))
+        if (TextUtils.isEmpty(apiKey))
             throw new IllegalArgumentException("API Key can not be null or empty. Please provide valid API Key. \n To get API Key reefer https://developers.google.com/maps/documentation/directions/#api_key");
         this.apiKey = apiKey;
         this.context = context;
     }
 
-    public void findDirection(LatLng originLatLng, LatLng destinationLatLng, IDirectionListener directionListener) {
-        if(originLatLng == null || destinationLatLng == null)
-            throw new IllegalArgumentException("Please provide non null original and destination LatLng value");
+
+    /**
+     * Finds Direction asynchronously for given <b>Origin</b> and <b>Destination</b>. For accurate result, We recommend you to use Origin and Destination value received from <a href="https://developers.google.com/maps/documentation/geocoding/">Geocoding API</a>
+     * @param origin      Origin Address
+     * @param destination Destination Address
+     * @param directionListener Listener object to receive Callback.
+     */
+
+    public void findDirection(String origin, String destination, IDirectionListener directionListener) {
+        findDirection(origin, destination, null, directionListener);
+    }
+
+    /**
+     * Finds Direction asynchronously for given <b>Origin</b> and <b>Destination</b>. For accurate result, We recommend you to use Origin and Destination value received from <a href="https://developers.google.com/maps/documentation/geocoding/">Geocoding API</a>
+     * @param origin      Origin Address
+     * @param destination Destination Address
+     * @param wayPoints Way points of your journey as String array.
+     * @param directionListener Listener object to receive Callback.
+     */
+    public void findDirection(String origin, String destination, String[] wayPoints, IDirectionListener directionListener) {
+        if (TextUtils.isEmpty(origin) || TextUtils.isEmpty(destination))
+            throw new IllegalArgumentException("Please provide non null origin and destination value");
         this.directionListener = directionListener;
         if (context != null && Utils.isNetworkAvailable(context)) {
-            String url = DirectionUrlFactory.createDirectionUrl(originLatLng, destinationLatLng, apiKey);
+            String url = DirectionUrlFactory.createDirectionUrl(origin, destination, wayPoints, apiKey);
             new DirectionFinderTask(directionListener).execute(url);
             LogUtils.d(TAG, url);
         } else {
@@ -39,5 +58,33 @@ public class DirectionFinder {
         }
     }
 
+    /**
+     * Finds Direction asynchronously for given <b>Origin</b> and <b>Destination</b>.
+     * @param originLatLng      Origin Address
+     * @param destinationLatLng Destination Address
+     * @param directionListener Listener object to receive Callback.
+     */
+    public void findDirection(LatLng originLatLng, LatLng destinationLatLng, IDirectionListener directionListener) {
+        findDirection(originLatLng, destinationLatLng, null, directionListener);
+    }
 
+    /**
+     * Finds Direction asynchronously for given <b>Origin</b> and <b>Destination</b>.
+     * @param originLatLng      Origin Address
+     * @param destinationLatLng Destination Address
+     * @param wayPoints Way points of your journey as LatLng array.
+     * @param directionListener Listener object to receive Callback.
+     */
+    public void findDirection(LatLng originLatLng, LatLng destinationLatLng, LatLng[] wayPoints, IDirectionListener directionListener) {
+        if (originLatLng == null || destinationLatLng == null)
+            throw new IllegalArgumentException("Please provide non null origin and destination LatLng value");
+        this.directionListener = directionListener;
+        if (context != null && Utils.isNetworkAvailable(context)) {
+            String url = DirectionUrlFactory.createDirectionUrl(originLatLng, destinationLatLng, wayPoints, apiKey);
+            new DirectionFinderTask(directionListener).execute(url);
+            LogUtils.d(TAG, url);
+        } else {
+            directionListener.onError(DirectionError.NO_INTERNET_CONNECTION);
+        }
+    }
 }
