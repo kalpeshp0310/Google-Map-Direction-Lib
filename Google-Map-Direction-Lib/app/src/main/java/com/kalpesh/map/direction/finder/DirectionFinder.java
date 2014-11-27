@@ -32,7 +32,6 @@ public class DirectionFinder {
      * Finds Direction asynchronously for given <b>Origin</b> and <b>Destination</b>. For accurate result, We recommend you to use Origin and Destination value received from <a href="https://developers.google.com/maps/documentation/geocoding/">Geocoding API</a>
      * @param origin      Origin Address
      * @param destination Destination Address
-     * @param directionListener Listener object to receive Callback.
      */
 
     public void findDirection(String origin, String destination) {
@@ -44,7 +43,6 @@ public class DirectionFinder {
      * @param origin      Origin Address
      * @param destination Destination Address
      * @param wayPoints Way points of your journey as String array.
-     * @param directionListener Listener object to receive Callback.
      */
     public void findDirection(String origin, String destination, String[] wayPoints) {
         if (TextUtils.isEmpty(origin) || TextUtils.isEmpty(destination))
@@ -62,7 +60,6 @@ public class DirectionFinder {
      * Finds Direction asynchronously for given <b>Origin</b> and <b>Destination</b>.
      * @param originLatLng      Origin Address
      * @param destinationLatLng Destination Address
-     * @param directionListener Listener object to receive Callback.
      */
     public void findDirection(LatLng originLatLng, LatLng destinationLatLng) {
         findDirection(originLatLng, destinationLatLng, null);
@@ -73,7 +70,6 @@ public class DirectionFinder {
      * @param originLatLng      Origin Address
      * @param destinationLatLng Destination Address
      * @param wayPoints Way points of your journey as LatLng array.
-     * @param directionListener Listener object to receive Callback.
      */
     public void findDirection(LatLng originLatLng, LatLng destinationLatLng, LatLng[] wayPoints) {
         if (originLatLng == null || destinationLatLng == null)
