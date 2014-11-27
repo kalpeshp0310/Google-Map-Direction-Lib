@@ -19,11 +19,12 @@ public class DirectionFinder {
     private Context context;
 
 
-    public DirectionFinder(Context context, String apiKey) {
+    public DirectionFinder(Context context, String apiKey, IDirectionListener directionListener) {
         if (TextUtils.isEmpty(apiKey))
             throw new IllegalArgumentException("API Key can not be null or empty. Please provide valid API Key. \n To get API Key reefer https://developers.google.com/maps/documentation/directions/#api_key");
         this.apiKey = apiKey;
         this.context = context;
+        this.directionListener = directionListener;
     }
 
 
@@ -34,8 +35,8 @@ public class DirectionFinder {
      * @param directionListener Listener object to receive Callback.
      */
 
-    public void findDirection(String origin, String destination, IDirectionListener directionListener) {
-        findDirection(origin, destination, null, directionListener);
+    public void findDirection(String origin, String destination) {
+        findDirection(origin, destination, null);
     }
 
     /**
@@ -45,10 +46,9 @@ public class DirectionFinder {
      * @param wayPoints Way points of your journey as String array.
      * @param directionListener Listener object to receive Callback.
      */
-    public void findDirection(String origin, String destination, String[] wayPoints, IDirectionListener directionListener) {
+    public void findDirection(String origin, String destination, String[] wayPoints) {
         if (TextUtils.isEmpty(origin) || TextUtils.isEmpty(destination))
             throw new IllegalArgumentException("Please provide non null origin and destination value");
-        this.directionListener = directionListener;
         if (context != null && Utils.isNetworkAvailable(context)) {
             String url = DirectionUrlFactory.createDirectionUrl(origin, destination, wayPoints, apiKey);
             new DirectionFinderTask(directionListener).execute(url);
@@ -64,8 +64,8 @@ public class DirectionFinder {
      * @param destinationLatLng Destination Address
      * @param directionListener Listener object to receive Callback.
      */
-    public void findDirection(LatLng originLatLng, LatLng destinationLatLng, IDirectionListener directionListener) {
-        findDirection(originLatLng, destinationLatLng, null, directionListener);
+    public void findDirection(LatLng originLatLng, LatLng destinationLatLng) {
+        findDirection(originLatLng, destinationLatLng, null);
     }
 
     /**
@@ -75,10 +75,9 @@ public class DirectionFinder {
      * @param wayPoints Way points of your journey as LatLng array.
      * @param directionListener Listener object to receive Callback.
      */
-    public void findDirection(LatLng originLatLng, LatLng destinationLatLng, LatLng[] wayPoints, IDirectionListener directionListener) {
+    public void findDirection(LatLng originLatLng, LatLng destinationLatLng, LatLng[] wayPoints) {
         if (originLatLng == null || destinationLatLng == null)
             throw new IllegalArgumentException("Please provide non null origin and destination LatLng value");
-        this.directionListener = directionListener;
         if (context != null && Utils.isNetworkAvailable(context)) {
             String url = DirectionUrlFactory.createDirectionUrl(originLatLng, destinationLatLng, wayPoints, apiKey);
             new DirectionFinderTask(directionListener).execute(url);
